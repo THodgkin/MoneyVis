@@ -1,0 +1,396 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tblAccount">
+          <Key>
+            <PropertyRef Name="account_id" />
+          </Key>
+          <Property Name="account_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="account_name" Type="nvarchar" MaxLength="250" />
+          <Property Name="account_abbrev" Type="nvarchar" MaxLength="50" />
+          <Property Name="opening_balance" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="opening_date" Type="datetime" />
+          <Property Name="account_type" Type="int" />
+          <Property Name="added_by" Type="int" />
+          <Property Name="added_on" Type="datetime" />
+          <Property Name="account_number" Type="nvarchar" MaxLength="150" />
+          <Property Name="routing_number" Type="nvarchar" MaxLength="150" />
+          <Property Name="interest_rate" Type="numeric" Precision="18" Scale="4" />
+          <Property Name="active" Type="int" />
+          <Property Name="website" Type="varchar" MaxLength="50" />
+          <Property Name="username" Type="varchar" MaxLength="50" />
+          <Property Name="password" Type="varchar" MaxLength="50" />
+          <Property Name="location_id" Type="int" />
+        </EntityType>
+        <EntityType Name="tblCategory">
+          <Key>
+            <PropertyRef Name="category_id" />
+          </Key>
+          <Property Name="category_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="category_name" Type="nvarchar" MaxLength="255" />
+          <Property Name="added_on" Type="datetime" />
+          <Property Name="added_by" Type="int" />
+        </EntityType>
+        <EntityType Name="tblLocation">
+          <Key>
+            <PropertyRef Name="location_id" />
+          </Key>
+          <Property Name="location_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="location_name" Type="nvarchar" MaxLength="255" />
+          <Property Name="category_id" Type="int" />
+          <Property Name="added_by" Type="int" />
+          <Property Name="added_on" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tblTransaction">
+          <Key>
+            <PropertyRef Name="transaction_id" />
+          </Key>
+          <Property Name="transaction_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="transaction_date" Type="datetime" />
+          <Property Name="transaction_amount" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="category_id" Type="int" />
+          <Property Name="location_id" Type="int" />
+          <Property Name="account_id" Type="int" />
+          <Property Name="added_by" Type="int" />
+          <Property Name="added_on" Type="datetime" />
+          <Property Name="event_id" Type="int" />
+          <Property Name="comments" Type="nvarchar" MaxLength="2000" />
+          <Property Name="linked_transaction_id" Type="int" />
+        </EntityType>
+        <Association Name="FK_tblAccount_tblLocation">
+          <End Role="tblLocation" Type="Self.tblLocation" Multiplicity="0..1" />
+          <End Role="tblAccount" Type="Self.tblAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblLocation">
+              <PropertyRef Name="location_id" />
+            </Principal>
+            <Dependent Role="tblAccount">
+              <PropertyRef Name="location_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblLocation_tblCategory">
+          <End Role="tblCategory" Type="Self.tblCategory" Multiplicity="0..1" />
+          <End Role="tblLocation" Type="Self.tblLocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblCategory">
+              <PropertyRef Name="category_id" />
+            </Principal>
+            <Dependent Role="tblLocation">
+              <PropertyRef Name="category_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTransaction_tblAccount">
+          <End Role="tblAccount" Type="Self.tblAccount" Multiplicity="0..1" />
+          <End Role="tblTransaction" Type="Self.tblTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblAccount">
+              <PropertyRef Name="account_id" />
+            </Principal>
+            <Dependent Role="tblTransaction">
+              <PropertyRef Name="account_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTransaction_tblCategory">
+          <End Role="tblCategory" Type="Self.tblCategory" Multiplicity="0..1" />
+          <End Role="tblTransaction" Type="Self.tblTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblCategory">
+              <PropertyRef Name="category_id" />
+            </Principal>
+            <Dependent Role="tblTransaction">
+              <PropertyRef Name="category_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTransaction_tblLocation">
+          <End Role="tblLocation" Type="Self.tblLocation" Multiplicity="0..1" />
+          <End Role="tblTransaction" Type="Self.tblTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblLocation">
+              <PropertyRef Name="location_id" />
+            </Principal>
+            <Dependent Role="tblTransaction">
+              <PropertyRef Name="location_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ModelStoreContainer">
+          <EntitySet Name="tblAccount" EntityType="Self.tblAccount" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblCategory" EntityType="Self.tblCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblLocation" EntityType="Self.tblLocation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblTransaction" EntityType="Self.tblTransaction" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_tblAccount_tblLocation" Association="Self.FK_tblAccount_tblLocation">
+            <End Role="tblLocation" EntitySet="tblLocation" />
+            <End Role="tblAccount" EntitySet="tblAccount" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblLocation_tblCategory" Association="Self.FK_tblLocation_tblCategory">
+            <End Role="tblCategory" EntitySet="tblCategory" />
+            <End Role="tblLocation" EntitySet="tblLocation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTransaction_tblAccount" Association="Self.FK_tblTransaction_tblAccount">
+            <End Role="tblAccount" EntitySet="tblAccount" />
+            <End Role="tblTransaction" EntitySet="tblTransaction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTransaction_tblCategory" Association="Self.FK_tblTransaction_tblCategory">
+            <End Role="tblCategory" EntitySet="tblCategory" />
+            <End Role="tblTransaction" EntitySet="tblTransaction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTransaction_tblLocation" Association="Self.FK_tblTransaction_tblLocation">
+            <End Role="tblLocation" EntitySet="tblLocation" />
+            <End Role="tblTransaction" EntitySet="tblTransaction" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tblAccount">
+          <Key>
+            <PropertyRef Name="account_id" />
+          </Key>
+          <Property Name="account_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="account_name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="account_abbrev" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="opening_balance" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="opening_date" Type="DateTime" Precision="3" />
+          <Property Name="account_type" Type="Int32" />
+          <Property Name="added_by" Type="Int32" />
+          <Property Name="added_on" Type="DateTime" Precision="3" />
+          <Property Name="account_number" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="routing_number" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="interest_rate" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="active" Type="Int32" />
+          <Property Name="website" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="location_id" Type="Int32" />
+          <NavigationProperty Name="tblLocation" Relationship="Self.FK_tblAccount_tblLocation" FromRole="tblAccount" ToRole="tblLocation" />
+          <NavigationProperty Name="tblTransactions" Relationship="Self.FK_tblTransaction_tblAccount" FromRole="tblAccount" ToRole="tblTransaction" />
+        </EntityType>
+        <EntityType Name="tblCategory">
+          <Key>
+            <PropertyRef Name="category_id" />
+          </Key>
+          <Property Name="category_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="category_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="added_on" Type="DateTime" Precision="3" />
+          <Property Name="added_by" Type="Int32" />
+          <NavigationProperty Name="tblLocations" Relationship="Self.FK_tblLocation_tblCategory" FromRole="tblCategory" ToRole="tblLocation" />
+          <NavigationProperty Name="tblTransactions" Relationship="Self.FK_tblTransaction_tblCategory" FromRole="tblCategory" ToRole="tblTransaction" />
+        </EntityType>
+        <EntityType Name="tblLocation">
+          <Key>
+            <PropertyRef Name="location_id" />
+          </Key>
+          <Property Name="location_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="location_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="category_id" Type="Int32" />
+          <Property Name="added_by" Type="Int32" />
+          <Property Name="added_on" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="tblAccounts" Relationship="Self.FK_tblAccount_tblLocation" FromRole="tblLocation" ToRole="tblAccount" />
+          <NavigationProperty Name="tblCategory" Relationship="Self.FK_tblLocation_tblCategory" FromRole="tblLocation" ToRole="tblCategory" />
+          <NavigationProperty Name="tblTransactions" Relationship="Self.FK_tblTransaction_tblLocation" FromRole="tblLocation" ToRole="tblTransaction" />
+        </EntityType>
+        <EntityType Name="tblTransaction">
+          <Key>
+            <PropertyRef Name="transaction_id" />
+          </Key>
+          <Property Name="transaction_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="transaction_date" Type="DateTime" Precision="3" />
+          <Property Name="transaction_amount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="category_id" Type="Int32" />
+          <Property Name="location_id" Type="Int32" />
+          <Property Name="account_id" Type="Int32" />
+          <Property Name="added_by" Type="Int32" />
+          <Property Name="added_on" Type="DateTime" Precision="3" />
+          <Property Name="event_id" Type="Int32" />
+          <Property Name="comments" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <Property Name="linked_transaction_id" Type="Int32" />
+          <NavigationProperty Name="tblAccount" Relationship="Self.FK_tblTransaction_tblAccount" FromRole="tblTransaction" ToRole="tblAccount" />
+          <NavigationProperty Name="tblCategory" Relationship="Self.FK_tblTransaction_tblCategory" FromRole="tblTransaction" ToRole="tblCategory" />
+          <NavigationProperty Name="tblLocation" Relationship="Self.FK_tblTransaction_tblLocation" FromRole="tblTransaction" ToRole="tblLocation" />
+        </EntityType>
+        <Association Name="FK_tblAccount_tblLocation">
+          <End Role="tblLocation" Type="Self.tblLocation" Multiplicity="0..1" />
+          <End Role="tblAccount" Type="Self.tblAccount" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblLocation">
+              <PropertyRef Name="location_id" />
+            </Principal>
+            <Dependent Role="tblAccount">
+              <PropertyRef Name="location_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTransaction_tblAccount">
+          <End Role="tblAccount" Type="Self.tblAccount" Multiplicity="0..1" />
+          <End Role="tblTransaction" Type="Self.tblTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblAccount">
+              <PropertyRef Name="account_id" />
+            </Principal>
+            <Dependent Role="tblTransaction">
+              <PropertyRef Name="account_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblLocation_tblCategory">
+          <End Role="tblCategory" Type="Self.tblCategory" Multiplicity="0..1" />
+          <End Role="tblLocation" Type="Self.tblLocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblCategory">
+              <PropertyRef Name="category_id" />
+            </Principal>
+            <Dependent Role="tblLocation">
+              <PropertyRef Name="category_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTransaction_tblCategory">
+          <End Role="tblCategory" Type="Self.tblCategory" Multiplicity="0..1" />
+          <End Role="tblTransaction" Type="Self.tblTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblCategory">
+              <PropertyRef Name="category_id" />
+            </Principal>
+            <Dependent Role="tblTransaction">
+              <PropertyRef Name="category_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTransaction_tblLocation">
+          <End Role="tblLocation" Type="Self.tblLocation" Multiplicity="0..1" />
+          <End Role="tblTransaction" Type="Self.tblTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblLocation">
+              <PropertyRef Name="location_id" />
+            </Principal>
+            <Dependent Role="tblTransaction">
+              <PropertyRef Name="location_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Finance_TrackerEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tblAccounts" EntityType="Self.tblAccount" />
+          <EntitySet Name="tblCategories" EntityType="Self.tblCategory" />
+          <EntitySet Name="tblLocations" EntityType="Self.tblLocation" />
+          <EntitySet Name="tblTransactions" EntityType="Self.tblTransaction" />
+          <AssociationSet Name="FK_tblAccount_tblLocation" Association="Self.FK_tblAccount_tblLocation">
+            <End Role="tblLocation" EntitySet="tblLocations" />
+            <End Role="tblAccount" EntitySet="tblAccounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTransaction_tblAccount" Association="Self.FK_tblTransaction_tblAccount">
+            <End Role="tblAccount" EntitySet="tblAccounts" />
+            <End Role="tblTransaction" EntitySet="tblTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblLocation_tblCategory" Association="Self.FK_tblLocation_tblCategory">
+            <End Role="tblCategory" EntitySet="tblCategories" />
+            <End Role="tblLocation" EntitySet="tblLocations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTransaction_tblCategory" Association="Self.FK_tblTransaction_tblCategory">
+            <End Role="tblCategory" EntitySet="tblCategories" />
+            <End Role="tblTransaction" EntitySet="tblTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTransaction_tblLocation" Association="Self.FK_tblTransaction_tblLocation">
+            <End Role="tblLocation" EntitySet="tblLocations" />
+            <End Role="tblTransaction" EntitySet="tblTransactions" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="Finance_TrackerEntities">
+          <EntitySetMapping Name="tblAccounts">
+            <EntityTypeMapping TypeName="Model.tblAccount">
+              <MappingFragment StoreEntitySet="tblAccount">
+                <ScalarProperty Name="account_id" ColumnName="account_id" />
+                <ScalarProperty Name="account_name" ColumnName="account_name" />
+                <ScalarProperty Name="account_abbrev" ColumnName="account_abbrev" />
+                <ScalarProperty Name="opening_balance" ColumnName="opening_balance" />
+                <ScalarProperty Name="opening_date" ColumnName="opening_date" />
+                <ScalarProperty Name="account_type" ColumnName="account_type" />
+                <ScalarProperty Name="added_by" ColumnName="added_by" />
+                <ScalarProperty Name="added_on" ColumnName="added_on" />
+                <ScalarProperty Name="account_number" ColumnName="account_number" />
+                <ScalarProperty Name="routing_number" ColumnName="routing_number" />
+                <ScalarProperty Name="interest_rate" ColumnName="interest_rate" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="website" ColumnName="website" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="location_id" ColumnName="location_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblCategories">
+            <EntityTypeMapping TypeName="Model.tblCategory">
+              <MappingFragment StoreEntitySet="tblCategory">
+                <ScalarProperty Name="category_id" ColumnName="category_id" />
+                <ScalarProperty Name="category_name" ColumnName="category_name" />
+                <ScalarProperty Name="added_on" ColumnName="added_on" />
+                <ScalarProperty Name="added_by" ColumnName="added_by" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblLocations">
+            <EntityTypeMapping TypeName="Model.tblLocation">
+              <MappingFragment StoreEntitySet="tblLocation">
+                <ScalarProperty Name="location_id" ColumnName="location_id" />
+                <ScalarProperty Name="location_name" ColumnName="location_name" />
+                <ScalarProperty Name="category_id" ColumnName="category_id" />
+                <ScalarProperty Name="added_by" ColumnName="added_by" />
+                <ScalarProperty Name="added_on" ColumnName="added_on" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblTransactions">
+            <EntityTypeMapping TypeName="Model.tblTransaction">
+              <MappingFragment StoreEntitySet="tblTransaction">
+                <ScalarProperty Name="transaction_id" ColumnName="transaction_id" />
+                <ScalarProperty Name="transaction_date" ColumnName="transaction_date" />
+                <ScalarProperty Name="transaction_amount" ColumnName="transaction_amount" />
+                <ScalarProperty Name="category_id" ColumnName="category_id" />
+                <ScalarProperty Name="location_id" ColumnName="location_id" />
+                <ScalarProperty Name="account_id" ColumnName="account_id" />
+                <ScalarProperty Name="added_by" ColumnName="added_by" />
+                <ScalarProperty Name="added_on" ColumnName="added_on" />
+                <ScalarProperty Name="event_id" ColumnName="event_id" />
+                <ScalarProperty Name="comments" ColumnName="comments" />
+                <ScalarProperty Name="linked_transaction_id" ColumnName="linked_transaction_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
